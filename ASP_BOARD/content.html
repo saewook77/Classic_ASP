@@ -1,0 +1,80 @@
+﻿<%@ Language = VBScript %>
+
+
+
+
+<!DOCTYPE html><%
+    Option Explicit
+    
+    Dim objDBConn
+    Dim objRs
+
+    Dim strSQL
+    
+    Dim BOARD_NO, TITLE, REG_DT, strContent
+
+    Set objDBConn = Server.CreateObject("ADODB.Connection")
+    Set objRs = Server.CreateObject("ADODB.RecordSet")
+
+    objDBConn.ConnectionString="Provider=SQLOLEDB.1;Integrated Security=SSPI;Persist Security Info=False;Initial Catalog=EVENT;Data Source=gdevdb01, 3950"
+    objDBConn.Open
+
+    strSQL = "select BOARD_NO, TITLE, REG_DT from dbo.EVENT_BOARD"
+
+    objDBConn.Execute strSQL
+
+
+
+
+    strSQL = "select BOARD_NO"  'objRs(0)
+    strSQL = strSQL & ",TITLE"   'objRs(1)
+    strSQL = strSQL & ",REG_DT"   'objRs(2)
+    strSQL = strSQL & "from dbo.EVENT_BOARD"
+    
+    objRs.Open strSQL, objDBConn
+
+    BOARD_NO = objRs(0)
+    TITLE = objRs(1)
+    REG_DT= objRs(2)
+
+    objRs.Close
+    Set objDBConn = nothing
+
+    If blnTag = "F" Then
+        strContent = Server.HTMLEncode(strContent)
+    End If
+
+%>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <title></title>
+	<meta charset="utf-8" />
+</head>
+<body>
+    <table>
+   <tr>
+       <td>번호</td>
+       <td><%=BOARD_NO%></td>
+   </tr>
+   <tr>
+       <td>제목</td>
+       <td><%=TITLE%></td>
+   </tr>
+   <tr>
+       <td>등록일</td>
+        <td colspan="3"><%=REG_DT%></td>
+   </tr>
+   <tr>
+       <td colspan="4" style="padding:15px;"><%=strContent%></td>
+   </tr>
+<!--   <tr>
+       <td colspan="4" align= "center">
+           <a href="edit/edit.asp?seq=<%=intSeq%>">수정하기</a>
+           <a href="list.asp">목록으로</a>
+           <a href="delete/delete.asp?seq=<%=intSeq%>">삭제하기</a>
+       </td>
+   </tr>-->
+</table>
+</body>
+</html>
